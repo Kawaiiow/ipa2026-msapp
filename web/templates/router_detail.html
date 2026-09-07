@@ -1,0 +1,51 @@
+<html>
+<head>
+    <title>Router Detail - {{ ip }}</title>
+    <link rel="stylesheet" href="/static/style.css" />
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 25px;
+        }
+        th, td {
+            border: 1px solid #000000;
+            padding: 8px 12px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <p><a href="{{ url_for('main') }}">&larr; Back to Router List</a></p>
+    <h1>Router Interface Status: {{ ip }}</h1>
+    <p>Showing latest 3 records (Interval: 60s)</p>
+
+    {% if records %}
+    <table>
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>Interface</th>
+                <th>IP Address</th>
+                <th>Status</th>
+                <th>Protocol</th>
+            </tr>
+        </thead>
+            <tbody>
+                {% for record in records %}
+                    {% for intf in record.interfaces %}
+                        <tr>
+                            <td>{{ record.timestamp }}</td>
+                            <td>{{ intf.interface }}</td>
+                            <td>{{ intf.ip_address }}</td>
+                            <td>{{ intf.status }}</td>
+                            <td>{{ intf.proto }}</td>
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No interface data available yet. Please wait for the worker to poll.</p>
+    {% endif %}
+</body>

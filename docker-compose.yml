@@ -1,0 +1,65 @@
+services:
+  web:
+    build: ./web
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongo
+    networks:
+      - app-net
+    env_file:
+      - .env
+    environment:
+      MONGO_URI: "mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/"
+      DB_NAME: "ipa2026_db"
+
+  mongo:
+    image: mongo:6
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - app-net
+    env_file:
+      - .env
+
+  scheduler:
+    build: ./scheduler
+    networks:
+      - app-net
+    env_file:
+      - .env
+    environment:
+      MONGO_URI: "mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/"
+      DB_NAME: "ipa2026_db"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - app-net
+    env_file:
+      - .env
+
+  worker:
+    build: ./worker
+    depends_on:
+      - rabbitmq
+    networks:
+      - app-net
+    env_file:
+      - .env
+    environment:
+      MONGO_URI: "mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/"
+      DB_NAME: "ipa2026_db"
+    deploy:
+      replicas: 3
+
+volumes:
+  mongo-data:
+
+networks:
+  app-net:

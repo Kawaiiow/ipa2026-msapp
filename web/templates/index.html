@@ -1,0 +1,33 @@
+<html>
+<head>
+    <title>Router Management</title>
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+    <h1>Register Router</h1>
+    <form method="POST" action="/add">
+        <input name="ip" placeholder="IP" required />
+        <input name="username" placeholder="Username" required />
+        <input name="password" placeholder="Password" type="password" required />
+        <button type="submit">Add</button>
+    </form>
+
+    <h1>Routers List</h1>
+    <ul>
+        {% for router in data %}
+            <li style="margin-bottom: 8px;">
+                <!-- Link ไปยังหน้ารายละเอียด Interface Status -->
+                <a href="{{ url_for('router_detail', ip=router.ip) }}"><strong>{{ router.ip }}</strong></a>
+                - {{ router.username }}
+                
+                <form method="POST" action="{{ url_for('delete_router') }}" style="display:inline">
+                    <input type="hidden" name="id" value="{{ router._id }}">
+                    <button type="submit">Delete</button>
+                </form>
+            </li>
+        {% else %}
+            <li>No routers registered.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
