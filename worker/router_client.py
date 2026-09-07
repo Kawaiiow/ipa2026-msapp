@@ -20,6 +20,7 @@ def get_interfaces(ip, username, password):
         conn.disconnect()
 
     print(json.dumps(result, indent=2))
+    return result
 
 
 if __name__=='__main__':

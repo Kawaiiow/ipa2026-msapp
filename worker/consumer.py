@@ -21,10 +21,11 @@ def consume(host):
         exit(1)
 
     ch = conn.channel()
-    ch.queue_declare(queue="router_jobs")
+    ch.queue_declare(queue="router_jobs", durable=True)
     ch.basic_qos(prefetch_count=1)
-    ch.basic_consume(queue="router_jobs", on_message_callback=callback, auto_ack=True)
+    ch.basic_consume(queue="router_jobs", on_message_callback=callback, auto_ack=False)
     ch.start_consuming()
 
 if __name__=='__main__':
-    consume("localhost")
+    host = os.getenv("RABBITMQ_HOST", "localhost")
+    consume(host)
