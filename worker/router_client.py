@@ -1,8 +1,10 @@
+import json
+import os
 from netmiko import ConnectHandler
-import ntc_templates, os, json
+import ntc_templates
+
 
 def get_interfaces(ip, username, password):
-
     os.environ["NET_TEXTFSM"] = os.path.join(
         os.path.dirname(ntc_templates.__file__), "templates"
     )
@@ -23,5 +25,5 @@ def get_interfaces(ip, username, password):
     return result
 
 
-if __name__=='__main__':
+if __name__ == "__main__":
     get_interfaces()

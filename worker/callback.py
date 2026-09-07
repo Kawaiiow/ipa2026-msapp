@@ -2,6 +2,7 @@ from bson import json_util
 from router_client import get_interfaces
 from database import save_interface_status
 
+
 def callback(ch, method, props, body):
     job = json_util.loads(body.decode())
     router_ip = job["ip"]
@@ -18,4 +19,3 @@ def callback(ch, method, props, body):
     except Exception as e:
         print(f"Error processing router {router_ip}: {e}")
         ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
-
